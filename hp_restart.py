@@ -34,12 +34,23 @@ def load_hpData(config):
         hp_ip = config['publicIP'][key]
         c_id = config['containerID'][key]
         c_ip = config['containerIP'][key]
-        mitm_p = config['mitimPort'][key]
+        mitm_p = config['mitmPort'][key]
 
         hp = Honeypot(hp_id, hp_ip, c_id, c_ip, mitm_p)
         honeypots.append(hp)
 
-def restart_hp(hp_id, config):
+def restart_hp(hp_id):
+    hp = None
+    for hps in honeypots:
+        if hps.hp_id == hp_id:
+            hp = hps
+            break
+    if hp is None and hp_id != 'all':
+        print('Failed to locate honeypot ' + hp_id + '.')
+        exit()
+
+    ps_cmd = 'ps aux | grep mitm | grep %s | awk \'{print $2}\'' % hp.c_id
+
     if hp_id == 'all':
         print('> all <')
         #restart_hp(1)
@@ -47,13 +58,14 @@ def restart_hp(hp_id, config):
         #restart_hp(3)
         #restart_hp(4)
     elif hp_id == '1':            
-        out = subprocess.check_output('ps aux | grep mitm')
+        out = subprocess.check_output(ps_cmd, shell=True, stderr=subprocess.STDOUT)
+        print(out)
     elif hp_id == '2':
-        out = subprocess.check_output('ps aux | grep mitm')
+        out = subprocess.check_output(ps_cmd, shell=True, stderr=subprocess.STDOUT)
     elif hp_id == '3':
-        out = subprocess.check_output('ps aux | grep mim')
+        out = subprocess.check_output(ps_cmd, shell=True, stderr=subprocess.STDOUT)
     else:
-        out = subprocess.check_output('ps aux | grep mitm')
+        out = subprocess.check_output(ps_cmd, shell=True, stderr=subprocess.STDOUT)
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:

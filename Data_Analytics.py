@@ -7,6 +7,9 @@ import matplotlib.pyplot
 data = pd.read_csv("/Users/CAM_CAM_1/Downloads/????")
 #print(data.columns)
 
+#These will be helpful with keystrokes and other numerical data we collect.
+
+
 def histogram():
     """
     The python functions below will work to create a histogram.

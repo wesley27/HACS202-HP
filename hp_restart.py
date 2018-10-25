@@ -49,7 +49,7 @@ def restart_hp(hp_id):
         print('Failed to locate honeypot ' + hp_id + '.')
         exit()
 
-    ps_cmd = 'ps aux | grep mitm | grep %s | grep -q \'/bin/sh\' | awk \'{print $2}\'' % hp.c_id
+    ps_cmd = 'ps aux | grep mitm | grep %s | grep -v \'/bin/sh\' | awk \'{print $2}\'' % hp.c_id
 
     if hp_id == 'all':
         print('> all <')

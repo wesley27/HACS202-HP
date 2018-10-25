@@ -29,21 +29,28 @@ class Honeypot:
         return self.mitm_p
 
 def load_hpData(config):
-    
-        
+    for key in config['publicIP']:
+        hp_id = key[2:]
+        hp_ip = config['publicIP'][key]
+        c_id = config['containerID'][key]
+        c_ip = config['containerIP'][key]
+        mitm_p = config['mitimPort'][key]
 
-def restart_hp(hp, config):
-    if hp == 'all':
+        hp = Honeypot(hp_id, hp_ip, c_id, c_ip, mitm_p)
+        honeypots.append(hp)
+
+def restart_hp(hp_id, config):
+    if hp_id == 'all':
         print('> all <')
         #restart_hp(1)
         #restart_hp(2)
         #restart_hp(3)
         #restart_hp(4)
-    elif hp == '1':
+    elif hp_id == '1':            
         out = subprocess.check_output('ps aux | grep mitm')
-    elif hp == '2':
+    elif hp_id == '2':
         out = subprocess.check_output('ps aux | grep mitm')
-    elif hp == '3':
+    elif hp_id == '3':
         out = subprocess.check_output('ps aux | grep mim')
     else:
         out = subprocess.check_output('ps aux | grep mitm')

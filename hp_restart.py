@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 import subprocess
+import os
 import sys
 import yaml
 
+MITM_FILE = '/root/MITM/mitm/index.js'
+MITM_LOG_PATH = '/root/mitm_logs/mitm'
 honeypots = []
 
 class Honeypot:
@@ -49,23 +52,19 @@ def restart_hp(hp_id):
         print('Failed to locate honeypot ' + hp_id + '.')
         exit()
 
-    ps_cmd = 'ps aux | grep mitm | grep %s | grep -v \'/bin/sh\' | awk \'{print $2}\'' % hp.c_id
-
     if hp_id == 'all':
-        print('> all <')
-        #restart_hp(1)
-        #restart_hp(2)
-        #restart_hp(3)
-        #restart_hp(4)
-    elif hp_id == '1':            
-        out = subprocess.check_output(ps_cmd, shell=True, stderr=subprocess.STDOUT)
-        print(out)
-    elif hp_id == '2':
-        out = subprocess.check_output(ps_cmd, shell=True, stderr=subprocess.STDOUT)
-    elif hp_id == '3':
-        out = subprocess.check_output(ps_cmd, shell=True, stderr=subprocess.STDOUT)
+        restart_hp('1')
+        restart_hp('2')
+        restart_hp('3')
+        restart_hp('4')
     else:
-        out = subprocess.check_output(ps_cmd, shell=True, stderr=subprocess.STDOUT)
+        cmd_ps = 'ps aux | grep mitm | grep %s | grep -v \'/bin/sh\' | awk \'{print $2}\'' % hp.c_id
+        cmd_kl = 'kill '
+        cmd_nh = 'nohup node %s HACS202_D %s %s %s > %s%s.log 2>&1&' % (MITM_FILE, hp.mitm_p(), hp.c_ip(), hp.cp_id(), MITM_LOG_PATH, hp.hp_id()) 
+
+        pid = subprocess.check_output(cmd_ps, shell=True, stderr=subprocess.STDOUT).strip()
+        os.system(cmd_kl + pid)
+        os.system(cmd_nh)
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:

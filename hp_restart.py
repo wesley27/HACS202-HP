@@ -5,7 +5,7 @@ import sys
 import yaml
 
 MITM_FILE = '/root/MITM/mitm/index.js'
-MITM_LOG_PATH = '/root/mitm_logs/mitm'
+MITM_LOG_PATH = '~/mitm_logs/mitm'
 honeypots = []
 
 class Honeypot:
@@ -15,21 +15,6 @@ class Honeypot:
         self.c_id = c_id
         self.c_ip = c_ip
         self.mitm_p = mitm_p
-
-    def hp_id(self):
-        return self.hp_id
-
-    def ip(self):
-        return self.ip
-
-    def c_id(self):
-        return self.c_id
-
-    def c_ip(self):
-        return self.c_ip
-
-    def mitm_p(self):
-        return self.mitm_p
 
 def load_hpData(config):
     for key in config['publicIP']:
@@ -60,7 +45,7 @@ def restart_hp(hp_id):
     else:
         cmd_ps = 'ps aux | grep mitm | grep %s | grep -v \'/bin/sh\' | awk \'{print $2}\'' % hp.c_id
         cmd_kl = 'kill '
-        cmd_nh = 'nohup node %s HACS202_D %s %s %s > %s%s.log 2>&1&' % (MITM_FILE, hp.mitm_p(), hp.c_ip(), hp.cp_id(), MITM_LOG_PATH, hp.hp_id()) 
+        cmd_nh = 'nohup node %s HACS202_D %s %s %s > %s%s.log 2>&1&' % (MITM_FILE, hp.mitm_p, hp.c_ip, hp.c_id, MITM_LOG_PATH, hp.hp_id)
 
         pid = subprocess.check_output(cmd_ps, shell=True, stderr=subprocess.STDOUT).strip()
         os.system(cmd_kl + pid)

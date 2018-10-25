@@ -2,30 +2,12 @@
 import subprocess
 import os
 import sys
-import yaml
+
+from honeypot import *
 
 MITM_FILE = '/root/MITM/mitm/index.js'
 MITM_LOG_PATH = '~/mitm_logs/mitm'
 honeypots = []
-
-class Honeypot:
-    def __init__(self, hp_id = None, ip = None, c_id = None, c_ip = None, mitm_p = None):
-        self.hp_id = hp_id
-        self.ip = ip
-        self.c_id = c_id
-        self.c_ip = c_ip
-        self.mitm_p = mitm_p
-
-def load_hpData(config):
-    for key in config['publicIP']:
-        hp_id = key[2:]
-        hp_ip = config['publicIP'][key]
-        c_id = config['containerID'][key]
-        c_ip = config['containerIP'][key]
-        mitm_p = config['mitmPort'][key]
-
-        hp = Honeypot(hp_id, hp_ip, c_id, c_ip, mitm_p)
-        honeypots.append(hp)
 
 def restart_hp(hp_id):
     hp = None
@@ -57,7 +39,5 @@ if __name__ == '__main__':
     elif sys.argv[1] not in ['1', '2', '3', '4', 'all']:
         print('Invalid argument used. Proper usage is ./hp-restart <honeypot #>')
     else:
-        with open('.conf.yml', 'r') as ymlfile:
-            cfg = yaml.load(ymlfile)
-        load_hpData(cfg)
+        honeypots = load_hpData()
         restart_hp(sys.argv[1])

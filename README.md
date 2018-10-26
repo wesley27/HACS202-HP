@@ -2,12 +2,28 @@
 This repository is a collection of scripts, tools, functions, and research used to conduct honeypot research for HACS202.
 
 ## Repository Contents
-[Honeypot MITM Restart Script](hp_restart.py)
+[Honeypot MITM Restart Script](mitm_restart)
+[Honeypot Configuration Loader](honeypot.py)
 
 ### Configuration Details
-Scripts requiring honeypot information (ips, containers, ports, etc) obtain any reuqired details from a locally stored configuration (.conf.yml). This file is ommitted from the public online repository due to the sensitive nature of its contents.
+Scripts requiring honeypot information (ips, containers, ports, etc) obtain any required details from a locally stored configuration (.conf.yml). This file is ommitted from the public online repository due to the sensitive nature of its contents.
 
-The following is a template of **.conf.yml**, with sensitive information removed.
+Scripts can use the following to easily access honeypot configuration data:
+```
+from honeypot import *
+honeypots = []
+honeypots = load_hpData()
+
+# prints the data in honeypot 1
+for hps in honeypots:
+    if hps.hp_id == '1':
+        hp = hps
+        break
+
+print(hp.ip)
+```
+
+The following is a template of **.conf.yml**, with sensitive information removed:
 ```
 #.conf.yml base template
 

@@ -5,6 +5,15 @@ import sys
 
 from honeypot import *
 
+"""
+This script restarts the Man-In-The-Middle (MITM) service
+for any (or all) given honeypots. It kills the existing
+process and replaces it with a new one.
+
+Proper usage:
+./mitm-restart <honeypot # | all>
+"""
+
 MITM_FILE = '/root/MITM/mitm/index.js'
 MITM_LOG_PATH = '~/mitm_logs/mitm'
 honeypots = []
@@ -35,9 +44,9 @@ def restart_hp(hp_id):
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print('Invalid number of arguments. Proper usage is ./hp-restart <honeypot #>')
+        print('Invalid number of arguments. Proper usage is ./mitm-restart <honeypot #>')
     elif sys.argv[1] not in ['1', '2', '3', '4', 'all']:
-        print('Invalid argument used. Proper usage is ./hp-restart <honeypot #>')
+        print('Invalid argument used. Proper usage is ./mitm-restart <honeypot #>')
     else:
         honeypots = load_hpData()
         restart_hp(sys.argv[1])

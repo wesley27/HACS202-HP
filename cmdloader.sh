@@ -7,4 +7,3 @@
 # the need for loading them as imports.
 cp mitm-ssr /usr/local/bin/
 cp honeypot.py /usr/local/bin/
-cp hp-recycler /usr/local/bin/

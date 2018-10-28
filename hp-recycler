@@ -6,7 +6,11 @@ import time
 from honeypot import *
 
 """
-This script handles the recycling of honeypot containers 
+
+*** This script should be run in the background upon honeypot deployment. ***
+*** Be sure to stop it if honeypots are shut down, and restart if restarted. ***
+
+This script handles the recycling of all honeypot containers 
 over a set period of time. It restores active honeypots
 to a clean, uncompromised backup so that they may 
 maintain their research initiative and be compromised again.

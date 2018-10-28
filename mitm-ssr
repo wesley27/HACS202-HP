@@ -16,6 +16,7 @@ Proper usage:
 
 MITM_FILE = '/root/MITM/mitm/index.js'
 MITM_LOG_PATH = '~/mitm_logs/mitm'
+MITM_LOG_HIST_PATH = '~/mitm_logs/history/'
 honeypots = []
 
 def start_mitm(hp_id):
@@ -56,9 +57,14 @@ def stop_mitm(hp_id):
     else:
         cmd_ps = 'ps aux | grep mitm | grep %s | grep -v \'/bin/sh\' | awk \'{print $2}\'' % hp.c_id
         cmd_kl = 'kill '
+        cmd_num_logs = 'ls %s | grep \"mitm%s\" -o | wc -l' % (MITM_LOG_HIST_PATH, hp.hp_id)
 
         pid = subprocess.check_output(cmd_ps, shell=True, stderr=subprocess.STDOUT).strip()
         os.system(cmd_kl + pid)
+        
+        log_num = subprocess.check_output(cmd_num_logs, shell=True, stderr=subprocess.STDOUT)
+        cmd_sv_log = 'cp %s%s.log %smitm%s-%s.log' % (MITM_LOG_PATH, hp.hp_id, MITM_LOG_HIST_PATH, hp.hp_id, (log_num + 1))
+        os.system(cmd_sv_log)
 
 def restart_mitm(hp_id):
     hp = None
@@ -76,13 +82,8 @@ def restart_mitm(hp_id):
         restart_mitm('3')
         restart_mitm('4')
     else:
-        cmd_ps = 'ps aux | grep mitm | grep %s | grep -v \'/bin/sh\' | awk \'{print $2}\'' % hp.c_id
-        cmd_kl = 'kill '
-        cmd_nh = 'nohup node %s HACS202_D %s %s %s > %s%s.log 2>&1&' % (MITM_FILE, hp.mitm_p, hp.c_ip, hp.c_id, MITM_LOG_PATH, hp.hp_id)
-
-        pid = subprocess.check_output(cmd_ps, shell=True, stderr=subprocess.STDOUT).strip()
-        os.system(cmd_kl + pid)
-        os.system(cmd_nh)
+        stop_mitm(hp_id)
+        start_mitm(hp_id)
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:

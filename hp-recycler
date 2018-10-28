@@ -1,0 +1,36 @@
+#!/usr/bin/env python
+import os
+import time
+
+from honeypot import *
+
+"""
+This script handles the recycling of honeypot containers 
+over a set period of time. It restores active honeypots
+to a clean, uncompromised backup so that they may 
+maintain their research initiative and be compromised again.
+
+Lifecycle is 12 hours. General procedure is as follows:
+1. Stop container (honeypot)
+2. Kill MITM
+3. Unmount container storage
+4. Destroy container
+5. Restore container from backup of base configuration ("containderid.tar")
+6. Start container
+7. Start MITM
+"""
+
+BASE_PCT_PATH = '/var/lib/vz/dump/'
+honeypots = []
+honeypots = load_hpData()
+
+while True:
+    time.sleep(60*60*12)
+    for hp in honeypots:
+        os.system('pct stop %s' % hp.c_id)
+        os.system('mitm-ssr stop %s' % hp.hp_id)
+        os.system('umount /media/%s' % hp.c_id)
+        os.system('pct destroy %s' % hp.c_id)
+        os.system('pct restore %s %s%s.tar --storage local-lvm' % (hp.c_id, BASE_PCT_PATH, hp.c_id))
+        os.system('pct start %s' % hp.c_id)
+        os.system('mitm-ssr start %s' % hp.hp_id)

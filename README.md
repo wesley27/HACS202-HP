@@ -2,8 +2,10 @@
 This repository is a collection of scripts, tools, functions, and research used to conduct honeypot research for HACS202.
 
 ## Repository Contents
-[Honeypot MITM Restart Script](mitm_restart)
-[Honeypot Configuration Loader](honeypot.py)
+[Honeypot MITM Restart Script](mitm-ssr)\
+[Honeypot Recycling Script](hp-recycler.sh)\
+[Honeypot Configuration Loader](honeypot.py)\
+[Script->Path CMD Loader](cmdloader.sh)
 
 ### Configuration Details
 Scripts requiring honeypot information (ips, containers, ports, etc) obtain any required details from a locally stored configuration (.conf.yml). This file is ommitted from the public online repository due to the sensitive nature of its contents.

@@ -63,7 +63,7 @@ def stop_mitm(hp_id):
         os.system(cmd_kl + pid)
         
         log_num = subprocess.check_output(cmd_num_logs, shell=True, stderr=subprocess.STDOUT)
-        cmd_sv_log = 'cp %s%s.log %smitm%s-%s.log' % (MITM_LOG_PATH, hp.hp_id, MITM_LOG_HIST_PATH, hp.hp_id, (log_num + 1))
+        cmd_sv_log = 'cp %s%s.log %smitm%s-%s.log' % (MITM_LOG_PATH, hp.hp_id, MITM_LOG_HIST_PATH, hp.hp_id, str(int(log_num) + 1))
         os.system(cmd_sv_log)
 
 def restart_mitm(hp_id):

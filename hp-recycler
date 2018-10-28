@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import datetime
 import os
 import time
 
@@ -34,3 +35,5 @@ while True:
         os.system('pct restore %s %s%s.tar --storage local-lvm' % (hp.c_id, BASE_PCT_PATH, hp.c_id))
         os.system('pct start %s' % hp.c_id)
         os.system('mitm-ssr start %s' % hp.hp_id)
+        timestamp = datetime.datetime.now()
+        print('%s | Honeypot %s with container id %s has been recycled.' % (str(timestamp), hp.hp_id, hp.c_id))

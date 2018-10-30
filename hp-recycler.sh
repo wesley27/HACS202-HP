@@ -25,7 +25,7 @@ while true
 do
     sleep 43200
 
-    mitm-ssr stop all
+    ~/HACS202-HP/mitm-ssr stop all
     timestamp=$(date '+%Y-%m-%d %H:%M:%S')
     echo "$timestamp | All MITM instances have been stopped."
     timestamp=$(date '+%Y-%m-%d %H:%M:%S')
@@ -60,7 +60,7 @@ do
         echo "$timestamp | -"
     done
 
-    mitm-ssr start all
+    ~/HACS202-HP/mitm-ssr start all
     timestamp=$(date '+%Y-%m-%d %H:%M:%S')
     echo "$timestamp | All MITM instances have been started."
     echo "-------------------------------------------------------"

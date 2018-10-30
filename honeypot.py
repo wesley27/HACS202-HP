@@ -26,7 +26,7 @@ class Honeypot:
         self.mitm_p = mitm_p
 
 def load_hpData():
-    with open('.conf.yml', 'r') as ymlfile:
+    with open('~/HACS202-HP/.conf.yml', 'r') as ymlfile:
         config = yaml.load(ymlfile)
 
     honeypot_list = []

@@ -12,12 +12,14 @@ import unicodedata
 """
 This script handles the processing of attacker session files to obtain
 IP address information and statistics. It outputs this data to a csv
-file that can be found at ./ipdata.csv. 
+file that can be found at ./processed/ipdata.csv. 
 
 The directory ./processed must exist before running this script. It moves
 processed session files into the ./processed folder. It also outputs a
-frequency chart to ./processed/frequencies.txt
-chart for all IPs found.
+frequency chart to ./processed/frequencies.txt for all IPs found.
+
+The ipdata.csv and frequencies.txt files are updated each time this
+script is run.
 
 Proper usage:
 ./dextract-ipinfo.py
@@ -25,10 +27,11 @@ Proper usage:
 
 STR_ATK_IP = 'Attacker IP Address:'
 LN_END = '\n'
+CSV_PATH = 'processed/ipdata.csv'
 
 def extract_ip_data():
     session_pattern = re.compile('^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}')
-    csvout = open('ipdata.csv', 'wb')
+    csvout = open(CSV_PATH, 'ab+')
     filewriter = csv.writer(csvout, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     filewriter.writerow(['IP_address', 'city', 'country', 'IP_org'])
     ip_counts = []
@@ -41,6 +44,8 @@ def extract_ip_data():
                     if STR_ATK_IP in line:
                         ip = line.split(': ')[1][:-1]
                         found = 0
+
+                        # add to list of all ips found
                         for (num, ipv) in ip_counts:
                             if ipv == ip:
                                 ip_counts[ip_counts.index((num, ipv))] = (num + 1, ipv)
@@ -49,6 +54,7 @@ def extract_ip_data():
                         if found == 0:
                             ip_counts.append((1, ip))
 
+                        # get ip geolocation info and write to csv file
                         STR_IP_LKUP = 'http://ipinfo.io/%s' % (ip)
                         try:
                             response = urlopen(STR_IP_LKUP)
@@ -110,6 +116,22 @@ def extract_ip_data():
             f.write('IP: %s\tCount: %d%s' % (ipv, num, LN_END))
         f.truncate()
         f.close()
+
+    f = open(CSV_PATH, 'r')
+    csvlines = list(set(f.readlines()))
+    f.close()
+
+    csvlines.sort()
+    f = open(CSV_PATH, 'w')
+    f.write('IP_address,city,country,IP_org\n')
+    for line in csvlines:
+        if 'IP_address,city' in line:
+            continue
+        f.write(line)
+    f.truncate()
+    f.close()
+        
+        
                         
 
 if __name__ == '__main__':

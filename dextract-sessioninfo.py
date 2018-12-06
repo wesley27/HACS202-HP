@@ -25,6 +25,7 @@ def extract_session_data():
         if not session_pattern.match(filename):
             continue
 
+        print('Now processing: %s' % (filename))
         session_file = open(filename)
         timestamp = ''
         s_id = filename
@@ -48,6 +49,10 @@ def extract_session_data():
                 atk_ip = dat[1][:-1]
             elif 'command' in line:
                 dat = line.split(': ')
+                if len(dat) > 1:
+                    atk_cmd.append(dat[1][:-1])
+            elif 'root@CT10' in line:
+                dat = line.split(':~# ')
                 atk_cmd.append(dat[1][:-1])
             elif 'Output Below' in line:
                 at_output = True

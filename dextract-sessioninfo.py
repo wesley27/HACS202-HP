@@ -15,7 +15,7 @@ CSV_NAME = 'session_data.csv'
 
 def extract_session_data():
     csvout = open(CSV_NAME, 'ab+')
-    filewriter = csv.writer(csvout, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    filewriter = csv.writer(csvout, delimiter='%', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     if not os.path.isfile(CSV_NAME) or os.path.getsize(CSV_NAME) <= 0:
         filewriter.writerow(['timestamp', 's_id', 'c_id', 'atk_ip', 'atk_cmd', 'atk_output']) # column headers
 
@@ -38,7 +38,7 @@ def extract_session_data():
             #process file line by line
             if filename in line:
                 at_output = False
-            elif 'Date' in line:
+            elif 'Date: 2018' in line:
                 dat = line.split(': ')
                 timestamp = dat[1][:-1]
             elif 'Container ID:' in line:

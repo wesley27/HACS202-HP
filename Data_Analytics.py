@@ -1,10 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env
 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot
 
-data = pd.read_csv("/Users/CAM_CAM_1/Downloads/????")
+data = pd.read_csv("/root/attacker_sessions/processed/frequencies.csv")
 #print(data.columns)
 
 #These will be helpful with keystrokes and other numerical data we collect.
@@ -16,10 +16,10 @@ def histogram():
     """
     plt.style.use('seaborn')
     fig = plt.figure()
-    plt.hist(data[""])
-    plt.title("")
-    plt.xlabel("")
-    plt.ylabel("")
+    plt.hist(data["Actual_IP", "Count"])
+    plt.title("IP Frequency")
+    plt.xlabel("IP")
+    plt.ylabel("Count")
     plt.show()
 
 def scatter():
@@ -49,3 +49,10 @@ def scatter_regression():
     plt.xlabel("")
     plt.ylabel("")
     plt.show()
+
+def call_all():
+    histogram()
+    scatter()
+    scatter_regression()
+
+call_all()

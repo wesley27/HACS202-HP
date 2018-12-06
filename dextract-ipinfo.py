@@ -78,14 +78,38 @@ def extract_ip_data():
     csvout.close()
 
     freq_file_path = 'processed/frequencies.txt'
-    with open(freq_file_path, 'a') as f:
-        if os.path.isfile(freq_file_path) and os.path.getsize(freq_file_path) <= 0:
-            f.write('-------------------------%s' % LN_END)
-            f.write('Processed %d IP addresses%s' % (count, LN_END))
-            f.write('-------------------------%s' % LN_END)
+    with open(freq_file_path, 'a+') as f:
+        for line in f:
+            if '------' in line or 'Processed' in line:
+                continue
+
+            vals = line.split()
+            rIP = vals[1]
+            rCount = vals[3]
+            rFound = 0
+            count += int(rCount)
+
+            # add pre-existing ip stats to list that was just generated
+            for (onum, ipv) in ip_counts:
+                if ipv == rIP:
+                    ip_counts[ip_counts.index((onum, ipv))] = (onum + int(rCount), ipv)
+                    rFound = 1
+                    break
+            if rFound == 0:
+                ip_counts.append((rCount, rIP))
+        f.close()
+    
+    with open(freq_file_path, 'w') as f:
+        # rewrite file from beginning
+        f.write('-------------------------%s' % LN_END)
+        f.write('Processed %d IP addresses%s' % (count, LN_END))
+        f.write('-------------------------%s' % LN_END)
+
         ip_counts.sort()
         for (num, ipv) in ip_counts:
             f.write('IP: %s\tCount: %d%s' % (ipv, num, LN_END))
+        f.truncate()
+        f.close()
                         
 
 if __name__ == '__main__':

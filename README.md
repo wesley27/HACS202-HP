@@ -5,6 +5,8 @@ This repository is a collection of scripts, tools, functions, and research used 
 [Honeypot MITM Restart Script](mitm-ssr)\
 [Honeypot Recycling Script](hp-recycler.sh)\
 [Honeypot Configuration Loader](honeypot.py)\
+[IP Information Extractor](dextract-ipinfo.py)\
+[Session Unzipper](session-extractor.py)\
 [Script->Path CMD Loader](cmdloader.sh)
 
 ### Configuration Details

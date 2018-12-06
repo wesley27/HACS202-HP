@@ -102,7 +102,7 @@ def extract_ip_data():
                     rFound = 1
                     break
             if rFound == 0:
-                ip_counts.append((rCount, rIP))
+                ip_counts.append((int(rCount), rIP))
         f.close()
     
     with open(freq_file_path, 'w') as f:

@@ -6,12 +6,17 @@ import re
 from urllib2 import urlopen, HTTPError
 import json
 import csv
+import unicodedata
 
 
 """
 This script handles the processing of attacker session files to obtain
 IP address information and statistics. It outputs this data to a csv
-file that can be found at ./ipdata.csv. It also outputs a frequency
+file that can be found at ./ipdata.csv. 
+
+The directory ./processed must exist before running this script. It moves
+processed session files into the ./processed folder. It also outputs a
+frequency chart to ./processed/frequencies.txt
 chart for all IPs found.
 
 Proper usage:
@@ -19,6 +24,7 @@ Proper usage:
 """
 
 STR_ATK_IP = 'Attacker IP Address:'
+LN_END = '\n'
 
 def extract_ip_data():
     session_pattern = re.compile('^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}')
@@ -27,7 +33,7 @@ def extract_ip_data():
     filewriter.writerow(['IP_address', 'city', 'country', 'IP_org'])
     ip_counts = []
     count = 0
-    fail = 0
+    limit_met = 0
     for filename in os.listdir(os.getcwd()):
         if session_pattern.match(filename):
             with open(filename) as f:
@@ -56,20 +62,30 @@ def extract_ip_data():
                             try:
                                 filewriter.writerow([ip, city, country, org])
                             except UnicodeEncodeError as e:
-                                filewriter.writerow([ip, 'unicode-error', country, 'unicode error'])
+                                city = unicodedata.normalize('NFKD', city).encode('ascii', 'ignore')
+                                country = unicodedata.normalize('NFKD', country).encode('ascii', 'ignore')
+                                org = unicodedata.normalize('NFKD', org).encode('ascii', 'ignore')
+                                filewriter.writerow([ip, city, country, org])
                             count += 1
                         except HTTPError as e:
-                            fail = 1
+                            limit_met = 1
                             break
                 f.close()
-                if fail != 0:
+                CMD_MV = 'mv %s processed' % filename
+                os.system(CMD_MV)
+                if limit_met != 0:
                     break
     csvout.close()
-    print('Processed %d IP addresses' % (count))
-    print('-------------------------')
-    ip_counts.sort()
-    for (num, ipv) in ip_counts:
-        print('IP: %s\tCount: %d' % (ipv, num))
+
+    freq_file_path = 'processed/frequencies.txt'
+    with open(freq_file_path, 'a') as f:
+        if os.path.isfile(freq_file_path) and os.path.getsize(freq_file_path) <= 0:
+            f.write('-------------------------%s' % LN_END)
+            f.write('Processed %d IP addresses%s' % (count, LN_END))
+            f.write('-------------------------%s' % LN_END)
+        ip_counts.sort()
+        for (num, ipv) in ip_counts:
+            f.write('IP: %s\tCount: %d%s' % (ipv, num, LN_END))
                         
 
 if __name__ == '__main__':

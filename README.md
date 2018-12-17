@@ -2,10 +2,15 @@
 This repository is a collection of scripts, tools, functions, and research used to conduct honeypot research for HACS202.
 
 ## Repository Contents
+[Heatmap Generation Script](mapgen2.py)\
 [Honeypot MITM Restart Script](mitm-ssr)\
 [Honeypot Recycling Script](hp-recycler.sh)\
 [Honeypot Configuration Loader](honeypot.py)\
+[Honeypot Individual Command Extractor](hpcmd-ex.sh)\
 [IP Information Extractor](dextract-ipinfo.py)\
+[IP CSV File Corrector](ip-csv-corrector.py)\
+[Session Information Extractor](dextract-sessioninfo.py)\
+[Session Type Statistics Calculator](session-calculator.sh)\
 [Session Unzipper](session-extractor.py)\
 [Script->Path CMD Loader](cmdloader.sh)
 
@@ -56,3 +61,6 @@ containerIP:
     hp3: <hp3 ip>
     hp4: <hp4 ip>
 ```
+
+### HeatMap Generation
+The heatmap generator script requires a CSV file with the latitude and longitude of each geolocated IP address. It also requires a Google API key.
